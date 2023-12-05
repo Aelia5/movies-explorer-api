@@ -1,10 +1,10 @@
 const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ConflictError = require('../errors/conflict-err');
 const ValidationError = require('../errors/validation-err');
 // const NotFoundError = require('../errors/not-found-err');
-// const UnauthorizedError = require('../errors/unauthorized-err');
+const UnauthorizedError = require('../errors/unauthorized-err');
 
 const {
   conflictMessage,
@@ -12,7 +12,7 @@ const {
 } = require('../utils/constants');
 
 // const notFoundMessage = 'Такой пользователь не существует';
-// const unauthorizedMessage = 'Неправильные почта или пароль';
+const unauthorizedMessage = 'Неправильные почта или пароль';
 
 const { SUCCESS_CODE } = require('../utils/constants');
 
@@ -34,6 +34,35 @@ module.exports.createUser = (req, res, next) => {
             next(err);
           }
         });
+    });
+};
+
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+  User.findOne({ email }).select('+password')
+    .then((user) => {
+      if (!user) {
+        throw new UnauthorizedError(unauthorizedMessage);
+      }
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            throw new UnauthorizedError(unauthorizedMessage);
+          }
+          return (user);
+        });
+    })
+    .then((user) => {
+      const { NODE_ENV, JWT_SECRET } = process.env;
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
+      res.send({ token });
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -117,31 +146,3 @@ module.exports.createUser = (req, res, next) => {
 //     });
 // };
 
-// module.exports.login = (req, res, next) => {
-//   const { email, password } = req.body;
-//   User.findOne({ email }).select('+password')
-//     .then((user) => {
-//       if (!user) {
-//         throw new UnauthorizedError(unauthorizedMessage);
-//       }
-//       return bcrypt.compare(password, user.password)
-//         .then((matched) => {
-//           if (!matched) {
-//             throw new UnauthorizedError(unauthorizedMessage);
-//           }
-//           return (user);
-//         });
-//     })
-//     .then((user) => {
-//       const { NODE_ENV, JWT_SECRET } = process.env;
-//       const token = jwt.sign(
-//         { _id: user._id },
-//         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-//         { expiresIn: '7d' },
-//       );
-//       res.send({ token });
-//     })
-//     .catch((err) => {
-//       next(err);
-//     });
-// };
