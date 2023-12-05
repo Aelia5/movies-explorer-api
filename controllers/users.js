@@ -3,15 +3,15 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ConflictError = require('../errors/conflict-err');
 const ValidationError = require('../errors/validation-err');
-// const NotFoundError = require('../errors/not-found-err');
+const NotFoundError = require('../errors/not-found-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
 
 const {
   conflictMessage,
-  //validationErrorMessage,
+  validationErrorMessage,
 } = require('../utils/constants');
 
-// const notFoundMessage = 'Такой пользователь не существует';
+const notFoundMessage = 'Такой пользователь не существует';
 const unauthorizedMessage = 'Неправильные почта или пароль';
 
 const { SUCCESS_CODE } = require('../utils/constants');
@@ -66,83 +66,34 @@ module.exports.login = (req, res, next) => {
     });
 };
 
-// module.exports.getUsers = (req, res, next) => {
-//   User.find({})
-//     .then((users) => res.send(users))
-//     .catch((err) => {
-//       next(err);
-//     });
-// };
+module.exports.getCurrentUser = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
-// module.exports.getUserById = (req, res, next) => {
-//   User.findById(req.params.userId)
-//     .then((user) => {
-//       if (!user) {
-//         throw new NotFoundError(notFoundMessage);
-//       } else {
-//         res.send(user);
-//       }
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new ValidationError(err.message));
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
-
-// module.exports.getCurrentUser = (req, res, next) => {
-//   User.findById(req.user._id)
-//     .then((user) => {
-//       res.send(user);
-//     })
-//     .catch((err) => {
-//       next(err);
-//     });
-// };
-
-// module.exports.updateUser = (req, res, next) => {
-//   User.findByIdAndUpdate(
-//     req.user,
-//     { name: req.body.name, about: req.body.about },
-//     { new: true, runValidators: true },
-//   )
-//     .then((user) => {
-//       if (!user) {
-//         throw new NotFoundError(notFoundMessage);
-//       } else {
-//         res.send(user);
-//       }
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError' || err.name === 'ValidationError') {
-//         next(new ValidationError(err.message || validationErrorMessage));
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
-
-// module.exports.updateAvatar = (req, res, next) => {
-//   User.findByIdAndUpdate(
-//     req.user,
-//     { avatar: req.body.avatar },
-//     { new: true, runValidators: true },
-//   )
-//     .then((user) => {
-//       if (!user) {
-//         throw new NotFoundError(notFoundMessage);
-//       } else {
-//         res.send(user);
-//       }
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError' || err.name === 'ValidationError') {
-//         next(new ValidationError(err.message || validationErrorMessage));
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
-
+module.exports.updateUser = (req, res, next) => {
+  User.findByIdAndUpdate(
+    req.user,
+    { name: req.body.name, email: req.body.email },
+    { new: true, runValidators: true },
+  )
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError(notFoundMessage);
+      } else {
+        res.send(user);
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        next(new ValidationError(err.message || validationErrorMessage));
+      } else {
+        next(err);
+      }
+    });
+};
