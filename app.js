@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const { errors } = require('celebrate');
 
-const { PORT = 3000 } = process.env;
+const { NODE_ENV, PORT, DATABASE } = process.env;
 
 const app = express();
 const router = require('./routes/index');
@@ -22,7 +22,7 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', { useNewUrlParser: true });
+mongoose.connect(NODE_ENV === 'production' ? DATABASE : 'mongodb://127.0.0.1:27017/bitfilmsdb', { useNewUrlParser: true });
 
 app.use(helmet());
 
