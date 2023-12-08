@@ -5,14 +5,15 @@ const ConflictError = require('../errors/conflict-err');
 const ValidationError = require('../errors/validation-err');
 const NotFoundError = require('../errors/not-found-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
+const DefaultError = require('../errors/default-err');
 
 const {
-  conflictMessage,
   validationErrorMessage,
 } = require('../utils/constants');
 
 const notFoundMessage = 'Такой пользователь не существует';
-const unauthorizedMessage = 'Неправильные почта или пароль';
+const unauthorizedMessage = 'Вы ввели неправильный логин или пароль';
+const conflictMessage = 'Пользователь с таким email уже существует.';
 
 const { SUCCESS_CODE } = require('../utils/constants');
 
@@ -31,7 +32,7 @@ module.exports.createUser = (req, res, next) => {
           } else if (err.name === 'ValidationError') {
             next(new ValidationError(err.message));
           } else {
-            next(err);
+            next(new DefaultError('При регистрации пользователя произошла ошибка.'));
           }
         });
     });
@@ -92,8 +93,10 @@ module.exports.updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new ValidationError(err.message || validationErrorMessage));
+      } else if (err.code === 11000) {
+        next(new ConflictError(conflictMessage));
       } else {
-        next(err);
+        next(new DefaultError('При обновлении профиля произошла ошибка.'));
       }
     });
 };

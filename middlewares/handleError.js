@@ -5,9 +5,7 @@ module.exports.handleError = (err, req, res, next) => {
   res
     .status(statusCode)
     .send({
-      message: statusCode === DEFAULT_ERROR_CODE
-        ? 'На сервере произошла ошибка'
-        : message,
+      message: message || 'На сервере произошла ошибка',
     });
   next();
 };

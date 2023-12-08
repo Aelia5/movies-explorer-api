@@ -14,7 +14,7 @@ router.use(auth);
 router.use('/users', userRouter);
 router.use('/movies', movieRouter);
 router.use('*', (req, res, next) => {
-  const error = new NotFoundError('Такой путь не существует');
+  const error = new NotFoundError('Страница по указанному маршруту не найдена');
   next(error);
 });
 
