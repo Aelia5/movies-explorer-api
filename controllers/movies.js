@@ -14,7 +14,7 @@ const forbiddenMessage = 'Вы не можете удалить чужой фи�
 const { SUCCESS_CODE } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({}).populate('owner')
+  Movie.find({ owner: req.user._id }).populate('owner')
     .then((movies) => res.send(movies.reverse()))
     .catch((err) => {
       next(err);

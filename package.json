@@ -4,7 +4,7 @@
   "description": "Backend for the diploma project",
   "main": "index.js",
   "scripts": {
-    "lint": "airbnb-base",
+    "lint": "npx eslint .",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
