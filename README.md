@@ -4,15 +4,9 @@
 
 ## Автор: Ольга Любимова
 
-<!--## [Ссылка на репозиторий](https://github.com/Aelia5/movies-explorer-api)-->
+## [Ссылка на сайт](https://aelia.diploma.nomoredomainsmonster.ru/)
 
-## Ссылка на проект
-
-IP 84.201.178.216
-
-Backend https://api.aelia.diploma.nomoredomainsmonster.ru/
-
-Бэкэнд для дипломного проекта.
+Бэкенд для дипломного проекта, фронтенд которого находится [здесь](https://github.com/Aelia5/movies-explorer-frontend): это сайт, предназначенный для поиска фильмов и сохранения результатов поиска. 
 
 **Реализован следующий функционал:**
 
