@@ -30,6 +30,6 @@ app.use(errorLogger);
 app.use(errors());
 app.use(handleError);
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
+app.listen(PORT || 3001, () => {
+  console.log(`App listening on port ${PORT || 3001}`);
 });
