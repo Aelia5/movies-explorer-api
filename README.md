@@ -4,7 +4,7 @@
 
 ## Автор: Ольга Любимова
 
-## [Ссылка на сайт](https://aelia.diploma.nomoredomainsmonster.ru/)
+<!--## [Ссылка на сайт](https://aelia.diploma.nomoredomainsmonster.ru/)-->
 
 Бэкенд для дипломного проекта, фронтенд которого находится [здесь](https://github.com/Aelia5/movies-explorer-frontend): это сайт, предназначенный для поиска фильмов и сохранения результатов поиска. 
 
